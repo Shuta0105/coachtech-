@@ -7,8 +7,7 @@
 
 @section('content')
 <div class="purchase__content">
-    <form class="purchase-form" action="/purchase/{{ $item->id }}" method="post">
-        @csrf
+    <form class="purchase-form">
         <div class="purchase__left">
             <div class="purchase__item">
                 <div class="purchase__item-img">
@@ -28,11 +27,8 @@
                     <option class="purchase__method-select--item" value="1" @selected(old('paymethod')==1)>コンビニ払い</option>
                     <option class="purchase__method-select--item" value="2" @selected(old('paymethod')==2)>カード支払い</option>
                 </select>
-                @error ('paymethod')
-                <div class="form__error">
-                    {{ $message }}
-                </div>
-                @enderror
+                <div class="form__error" id="error-paymethod"></div>
+
             </div>
             <div class="purchase__address">
                 <div class="purchase__address-header">
@@ -42,20 +38,12 @@
                 <div class="purchase__address-body">
                     <div>〒{{ $address['post_code'] }}</div>
                     <div>{{ $address['address'] }}{{ $address['building'] }}</div>
-                    <input type="hidden" name="post_code" value="{{ $address['post_code'] }}">
-                    <input type="hidden" name="address" value="{{ $address['address'] }}">
+                    <input type="hidden" name="post_code" id="post_code" value="{{ $address['post_code'] }}">
+                    <input type="hidden" name="address" id="address" value="{{ $address['address'] }}">
                     <input type="hidden" name="building" value="{{ $address['building'] }}">
                 </div>
-                @error ('post_code')
-                <div class="form__error">
-                    {{ $message }}
-                </div>
-                @enderror
-                @error ('address')
-                <div class="form__error">
-                    {{ $message }}
-                </div>
-                @enderror
+                <div class="form__error" id="error-post_code"></div>
+                <div class="form__error" id="error-address"></div>
             </div>
         </div>
         <div class="purchase__right">
@@ -66,11 +54,11 @@
                 </tr>
                 <tr class="purchase-table__row">
                     <th class="purchase-table__header">支払い方法</th>
-                    <td class="purchase-table__item" id="selected-paymethod">未選択</td>
+                    <td class="purchase-table__item" id="selected-paymethod" dusk="selected-paymethod">未選択</td>
                 </tr>
             </table>
             <div class="purchase-form__button">
-                <button id="checkout-button" class="purchase-form__button-submit" data-id="{{ $item->id }}">購入する</button>
+                <button id="checkout-button" class="purchase-form__button-submit" type="button" data-id="{{ $item->id }}">購入する</button>
             </div>
         </div>
     </form>
@@ -96,16 +84,37 @@
     const stripe = Stripe("{{ config('services.stripe.key') }}");
     const button = document.getElementById('checkout-button');
     const itemId = button.dataset.id;
+    const form = document.querySelector('.purchase-form');
 
     button.addEventListener('click', async (e) => {
-        e.preventDefault();
+
+        document.querySelectorAll('.form__error').forEach(el => el.textContent = '');
+
+        const formData = new FormData(form);
         const res = await fetch(`/create-checkout-session/${itemId}`, {
             method: 'POST',
-            headers: { 'X-CSRF-TOKEN': token }
+            headers: {
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
+            },
+            body: formData
         });
-        const data = await res.json();
 
-        stripe.redirectToCheckout({ sessionId: data.id });
+        if (res.status === 422) {
+            const data = await res.json();
+            Object.entries(data.errors).forEach(([field, messages]) => {
+                const errorEl = document.getElementById(`error-${field}`);
+                if (errorEl) {
+                    errorEl.textContent = messages[0];
+                };
+            });
+            return;
+        }
+
+        const data = await res.json();
+        stripe.redirectToCheckout({
+            sessionId: data.id
+        });
     })
 </script>
 @endsection

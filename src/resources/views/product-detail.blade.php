@@ -44,12 +44,15 @@
         <div class="product-detail__desc">
             <h2>商品説明</h2>
         </div>
-        <div class="product-detail__desc--color">
+        <div class="product-detail__dex--text">
+            <p>{{ $item->detail }}</p>
+        </div>
+        <!-- <div class="product-detail__desc--color">
             <p>カラー：グレー</p>
         </div>
         <div class="product-detail__desc--condition">
             <p>新品<br>商品の状態は良好です。傷もありません。</p>
-        </div>
+        </div> -->
         <div class="product-detail__desc--shipping">
             <p>購入後、即発送いたします。</p>
         </div>
@@ -60,8 +63,9 @@
             <table class="product-detail__table-inner">
                 <tr class="product-detail__table-row">
                     <th class="product-detail__table-header">カテゴリー</th>
-                    <td class="product-detail__table-item">洋服</td>
-                    <td class="product-detail__table-item">メンズ</td>
+                    @foreach ($item_categories as $category)
+                    <td class="product-detail__table-item">{{ $category->category->content }}</td>
+                    @endforeach
                 </tr>
                 <tr class="product-detail__table-row">
                     <th class="product-detail__table-header">商品の状態</th>

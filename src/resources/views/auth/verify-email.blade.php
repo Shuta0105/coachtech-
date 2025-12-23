@@ -25,7 +25,7 @@
                     </h2>
                 </div>
                 <div class="verify-email__button">
-                    <a href="http://localhost:8025" target="_blank" class="verify-email__button--submit">認証はこちらから</a>
+                    <a href="http://localhost:8025" target="_blank" class="verify-email__button--submit" dusk="verify-email-button">認証はこちらから</a>
                 </div>
                 <form action="/email/verification-notification" method="post">
                     @csrf

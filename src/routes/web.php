@@ -7,31 +7,32 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ItemController::class, 'index']);
-Route::get('/items/search', [ItemController::class, 'search']);
 Route::get('/item/{item_id}', [ItemController::class, 'detail']);
-Route::post('/comment/{item_id}', [ItemController::class, 'comment']);
 
-Route::get('/purchase/{item_id}', [ItemController::class, 'purchase']);
-Route::post('/purchase/{item_id}', [ItemController::class, 'order']);
-Route::get('/purchase/address/{item_id}', [ItemController::class, 'address']);
-Route::post('/purchase/address/{item_id}', [ItemController::class, 'update']);
+Route::middleware('auth')->group(function () {
+    Route::post('/comment/{item_id}', [ItemController::class, 'comment']);
 
-Route::post('/create-checkout-session/{itemId}', [StripeController::class, 'createCheckoutSession']);
+    Route::get('/purchase/{item_id}', [ItemController::class, 'purchase']);
+    Route::get('/purchase/address/{item_id}', [ItemController::class, 'address']);
+    Route::post('/purchase/address/{item_id}', [ItemController::class, 'update']);
 
-Route::get('/sell', [ItemController::class, 'sell']);
-Route::post('/sell', [ItemController::class, 'store']);
+    Route::post('/create-checkout-session/{itemId}', [StripeController::class, 'createCheckoutSession']);
+    Route::get('/stripe/order', [StripeController::class, 'order'])->name('stripe.order');
 
-Route::post('/like/{item}', [LikeController::class, 'toggle']);
+    Route::get('/sell', [ItemController::class, 'sell']);
+    Route::post('/sell', [ItemController::class, 'store']);
 
-Route::get('/mypage', [UserController::class, 'index']);
-Route::get('/mypage/profile', [UserController::class, 'edit']);
-Route::post('/mypage/profile', [UserController::class, 'update']);
+    Route::post('/like/{item}', [LikeController::class, 'toggle']);
+
+    Route::get('/mypage', [UserController::class, 'index']);
+    Route::get('/mypage/profile', [UserController::class, 'edit']);
+    Route::post('/mypage/profile', [UserController::class, 'update']);
+});
 
 Route::get('/verify', function () {
     return view('auth.verify-email');
 });
 Route::post('/email/verification-notification', function () {
     request()->user()->sendEmailVerificationNotification();
-
     return back();
 });

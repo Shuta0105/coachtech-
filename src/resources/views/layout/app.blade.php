@@ -22,8 +22,10 @@
             <input id="search-input"
                 class="header__input--text"
                 type="text"
+                name="keyword"
                 placeholder="なにをお探しですか？"
                 value="{{ request('keyword') }}"
+                dusk="search-input"
                 >
             <div class="header__buttons">
                 @if (Auth::check())
