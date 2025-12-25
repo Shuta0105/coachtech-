@@ -58,6 +58,10 @@ coachtech フリマ
 - STRIPE_KEY
 - STRIPE_SECRET
 
+## ユーザー情報
+
+- パスワードは「12345678」で一律作成可能
+
 ## テスト実行方法
 
 tests/Feature ディレクトリのファイルに対して
