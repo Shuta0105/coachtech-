@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Item;
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,6 +15,9 @@ class CommentTest extends TestCase
     public function test_user_can_post_comment_and_comment_count_increases()
     {
         $user = User::factory()->create();
+        UserProfile::factory()->create([
+            'user_id' => $user->id
+        ]);
         /** @var \App\Models\User $user */
         $this->actingAs($user);
 

@@ -1,5 +1,6 @@
 .purchase__content {
     margin: 80px 80px 0;
+    white-space: nowrap;
 }
 
 .purchase-form {
@@ -115,4 +116,19 @@
 .form__error {
     color: red;
     margin-left: 60px;
+}
+
+@media screen and (max-width: 768px) {
+    .purchase-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
+    }
+    .purchase__left {
+        width: 100%;
+    }
+    .purchase__right {
+        width: 100%;
+    }
 }

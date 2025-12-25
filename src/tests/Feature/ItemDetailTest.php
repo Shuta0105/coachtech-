@@ -9,6 +9,7 @@ use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\Like;
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -19,6 +20,9 @@ class ItemDetailTest extends TestCase
     public function test_product_detail_page_displays_all_information()
     {
         $user = User::factory()->create();
+        UserProfile::factory()->create([
+            'user_id' => $user->id
+        ]);
         /** @var \App\Models\User $user */
         $this->actingAs($user);
 

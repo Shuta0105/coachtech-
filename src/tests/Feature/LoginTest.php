@@ -63,7 +63,7 @@ class LoginTest extends TestCase
             'password' => 'password123'
         ]);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect('/verify');
         $this->assertAuthenticatedAs($user);
     }
 }

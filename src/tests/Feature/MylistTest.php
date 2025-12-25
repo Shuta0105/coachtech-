@@ -55,7 +55,7 @@ class MylistTest extends TestCase
     {
         $response = $this->get('/?=mylist');
 
-        $response->assertSee('<div id="item-list" class="product-list__inner">', false)
+        $response->assertSee('<div id="item-list" class="product-list__inner" dusk="item-list">', false)
                 ->assertDontSee('<div class="product-list__item>');
 
         $response->assertStatus(200);

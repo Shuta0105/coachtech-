@@ -21,7 +21,7 @@
             <!-- いいね -->
             <div class="product-detail__icon-box">
                 <img
-                    class="product-detail__icon--heart {{ $item->likedby(auth()->user()) ? 'active' : '' }}"
+                    class="product-detail__icon--heart {{ $item->likedBy(auth()->user()) ? 'active' : '' }}"
                     src="{{ $item->likedBy(auth()->user()) 
                         ? asset('img/ハートロゴ_ピンク.png') 
                         : asset('img/ハートロゴ_デフォルト.png') }}"
@@ -46,12 +46,6 @@
         <div class="product-detail__dex--text">
             <p>{{ $item->detail }}</p>
         </div>
-        <!-- <div class="product-detail__desc--color">
-            <p>カラー：グレー</p>
-        </div>
-        <div class="product-detail__desc--condition">
-            <p>新品<br>商品の状態は良好です。傷もありません。</p>
-        </div> -->
         <div class="product-detail__desc--shipping">
             <p>購入後、即発送いたします。</p>
         </div>

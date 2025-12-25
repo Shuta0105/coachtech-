@@ -47,6 +47,6 @@ class MailTest extends TestCase
 
         $response = $this->actingAs($user)->get($verificationUrl);
 
-        $response->assertRedirect('/mypage/profile?verified=1');
+        $response->assertRedirect('/mypage/profile');
     }
 }
