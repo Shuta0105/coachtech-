@@ -16,6 +16,7 @@ class UserProfileFactory extends Factory
             'user_id' => User::factory(),
             'post_code' => $this->faker->postcode(),
             'address' => $this->faker->address(),
+            'building' => $this->faker->buildingNumber(),
         ];
     }
 }
