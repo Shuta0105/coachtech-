@@ -19,13 +19,20 @@
                     <img src="{{ asset('img/COACHTECHヘッダーロゴ.png') }}" alt="">
                 </a>
             </div>
-            <input id="search-input"
-                class="header__input--text"
-                type="text"
-                name="keyword"
-                placeholder="なにをお探しですか？"
-                value="{{ request('keyword') }}"
-                dusk="search-input">
+            <div class="search-box">
+                <input id="search-input"
+                    class="header__input--text"
+                    type="text"
+                    name="keyword"
+                    placeholder="なにをお探しですか？"
+                    value="{{ request('keyword') }}"
+                    dusk="search-input">
+                <select class="select-box" id="select" name="select">
+                    <option value="name">名前</option>
+                    <option value="price">価格</option>
+                    <option value="cat">カテゴリー</option>
+                </select>
+            </div>
             <div class="header__buttons">
                 @if (Auth::check())
                 <form action="/logout" class="logout__form" method="post">
