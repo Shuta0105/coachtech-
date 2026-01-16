@@ -18,7 +18,6 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->input('keyword');
-        $select = $request->input('select');
         $tab = $request->input('tab');
 
         $items = Item::withCount('order')
@@ -33,26 +32,8 @@ class ItemController extends Controller
                         ->orWhereNull('user_id');
                 });
             })
-            ->when($keyword, function ($q) use ($keyword, $select) {
-                if ($select === 'price') {
-                    $price = (int) $keyword;
-
-                    if ($price > 0) {
-                        $digits = strlen((string) $price);
-                        $unit   = 10 ** ($digits - 1);
-
-                        $min = (int) floor($price / $unit) * $unit;
-                        $max = $min + $unit - 1;
-
-                        $q->whereBetween('price', [$min, $max]);
-                    }
-                } elseif ($select === 'cat') {
-                    $q->whereHas('categories', function ($q) use ($keyword) {
-                        $q->where('content', 'like', "%{$keyword}%");
-                    });
-                } else {
-                    $q->where('name', 'like', "%{$keyword}%");
-                }
+            ->when($keyword, function ($q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%");
             })
             ->get();
 
