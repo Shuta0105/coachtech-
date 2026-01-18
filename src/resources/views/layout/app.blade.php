@@ -30,7 +30,7 @@
                 <select class="select-box" id="select" name="select">
                     <option value="name">名前</option>
                     <option value="price">価格</option>
-                    <option value="cat">カテゴリー</option>
+                    <option value="category">カテゴリー</option>
                 </select>
             </div>
             <div class="header__buttons">
