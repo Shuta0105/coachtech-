@@ -34,11 +34,10 @@ class ItemController extends Controller
                 });
             })
             ->when($keyword, function ($q) use ($keyword, $select) {
-                if ($select === 'price' && !ctype_digit($keyword)) {
-                    return;
-                }
-                
                 if ($select === 'price') {
+                    if (!ctype_digit($keyword)) {
+                        return;
+                    }
                     $price = (int) $keyword;
                     if ($price < 0) {
                         return;
