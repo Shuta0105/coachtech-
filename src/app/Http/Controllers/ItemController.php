@@ -5,19 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
+use App\Http\Requests\ItemSearchRequest;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Condition;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\UserProfile;
-use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    public function index(Request $request)
+    public function index(ItemSearchRequest $request)
     {
         $keyword = $request->input('keyword');
+        $select = $request->input('select');
         $tab = $request->input('tab');
 
         $items = Item::withCount('order')
@@ -32,8 +33,29 @@ class ItemController extends Controller
                         ->orWhereNull('user_id');
                 });
             })
-            ->when($keyword, function ($q) use ($keyword) {
-                $q->where('name', 'like', "%{$keyword}%");
+            ->when($keyword, function ($q) use ($keyword, $select) {
+                if ($select === 'price') {
+                    if (!ctype_digit($keyword)) {
+                        return;
+                    }
+                    $price = (int) $keyword;
+                    if ($price < 0) {
+                        return;
+                    }
+                    $digits = strlen((string) $price);
+                    $unit   = 10 ** ($digits - 1);
+
+                    $min = (int) floor($price / $unit) * $unit;
+                    $max = $min + $unit - 1;
+
+                    $q->whereBetween('price', [$min, $max]);
+                } elseif ($select === 'category') {
+                    $q->whereHas('categories', function ($q) use ($keyword) {
+                        $q->where('content', 'like', "%{$keyword}%");
+                    });
+                } else {
+                    $q->where('name', 'like', "%{$keyword}%");
+                }
             })
             ->get();
 

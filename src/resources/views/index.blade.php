@@ -30,6 +30,7 @@
 <script>
     const input = document.getElementById('search-input')
     const itemList = document.getElementById('item-list');
+    const select = document.getElementById('select');
     let timer = null;
 
     input.addEventListener('input', () => {
@@ -37,6 +38,12 @@
 
         timer = setTimeout(() => {
             const params = new URLSearchParams(location.search);
+
+            if (select.value) {
+                params.set('select', select.value);
+            } else {
+                params.delete('select');
+            }
 
             if (input.value) {
                 params.set('keyword', input.value);
