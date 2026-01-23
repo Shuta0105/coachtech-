@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{{ asset('css/mail/sell-item.css') }}">
 </head>
 
 <body>
@@ -16,12 +15,12 @@
     <img
         src="{{ asset('storage/' . $new_item->img) }}"
         alt="{{ $new_item->name }}"
-        width="400"
-        height="400">
+        width="300"
+        height="300">
 
     <p>
         商品名：{{ $new_item->name }}<br>
-        価格：{{ number_format($new_item->price) }}円
+        価格：{{ number_format($new_item->price) }}円<br>
         説明：{{ $new_item->detail }}
     </p>
 
