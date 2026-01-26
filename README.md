@@ -65,7 +65,10 @@ coachtech フリマ
 
 ### Mailhog
 
-初回登録時と初回ログイン時にメール認証必須
+- http://localhost:8025/
+- 初回登録時と初回ログイン時にメール認証必須
+- 出品後に出品者に対してメール通知
+- 購入後に購入者と出品者に対してメール通知
 
 ## ユーザー情報
 
@@ -86,6 +89,7 @@ tests/Browser ディレクトリのファイルに対して
 - トップ画面：http://localhost/
 - ユーザー登録：http://localhost/register
 - phpMyAdmin：http://localhost:8080/
+- mailhog：http://localhost:8025/
 
 ## 使用技術（実行環境）
 
