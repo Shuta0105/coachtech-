@@ -1,0 +1,39 @@
+.content {
+    margin: 60px auto;
+    width: 70%;
+    text-align: center;
+}
+
+h2 {
+    margin: 30px 0;
+}
+
+.select {
+    padding: 10px;
+    font-size: 18px;
+}
+
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+.radio-group label {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f5f5f5;
+    transition: all 0.2s ease;
+}
+
+/* 選択中のスタイル */
+.radio-group label:has(input:checked) {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+}
+
+
+
+

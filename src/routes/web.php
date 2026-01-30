@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -30,6 +31,10 @@ Route::middleware(['auth', 'cache.headers:no_store;max_age=0'])->group(function 
     Route::get('/mypage', [UserController::class, 'index']);
     Route::get('/mypage/profile', [UserController::class, 'edit']);
     Route::post('/mypage/profile', [UserController::class, 'update']);
+
+    Route::get('/update/shipping/status/{item_id}', [OrderController::class, 'index']);
+    Route::post('/update/shipping/status/{order_id}', [OrderController::class, 'update']);
+    Route::get('/shipping/status/{item_id}', [OrderController::class, 'detail']);
 });
 
 Route::get('/verify', function () {
@@ -49,3 +54,8 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
+
+
+Route::get('/error', function () {
+    return view('error');
+});

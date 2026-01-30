@@ -54,6 +54,11 @@
     padding: 0 60px;
 }
 
+.product-list__link {
+    text-decoration: none;
+    color: #000000;
+}
+
 .product-list__img {
     position: relative;
     aspect-ratio: 1/1;

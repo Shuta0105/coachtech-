@@ -26,16 +26,22 @@
         <div class="product-list__content">
             <div class="product-list__inner">
                 @foreach ($items as $item)
-                <div class="product-list__item">
-                    <div class="product-list__img">
-                        @if ($item->order_count > 0)
-                        <span class="product-list__item-sold">Sold</span>
+                @if ($param === 'sell')
+                <a class="product-list__link" href="/update/shipping/status/{{ $item->id }}">
+                    @else
+                    <a class="product-list__link" href="/shipping/status/{{ $item->id }}">
                         @endif
-                        <img src="{{ file_exists(public_path('img/' . $item->img)) ? asset('img/' . $item->img) : asset('storage/' . $item->img) }}">
-                    </div>
-                    <div class="product-list__item-name">{{ $item->name }}</div>
-                </div>
-                @endforeach
+                        <div class="product-list__item">
+                            <div class="product-list__img">
+                                @if ($item->order_count > 0)
+                                <span class="product-list__item-sold">Sold</span>
+                                @endif
+                                <img src="{{ file_exists(public_path('img/' . $item->img)) ? asset('img/' . $item->img) : asset('storage/' . $item->img) }}">
+                            </div>
+                            <div class="product-list__item-name">{{ $item->name }}</div>
+                        </div>
+                    </a>
+                    @endforeach
             </div>
         </div>
     </div>
