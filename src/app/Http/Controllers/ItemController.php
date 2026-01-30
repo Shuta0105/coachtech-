@@ -6,6 +6,7 @@ use App\Http\Requests\AddressRequest;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
 use App\Http\Requests\ItemSearchRequest;
+use App\Mail\SellItemMail;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Condition;
@@ -13,6 +14,7 @@ use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\UserProfile;
 use Exception;
+use Illuminate\Support\Facades\Mail;
 
 class ItemController extends Controller
 {
@@ -176,6 +178,10 @@ class ItemController extends Controller
                     'category_id' => $category_id
                 ]);
             };
+
+            Mail::to($new_item->user->email)
+                ->send(new SellItemMail($new_item));
+
             return redirect('/');
         } catch (Exception $e) {
             return view('error');
