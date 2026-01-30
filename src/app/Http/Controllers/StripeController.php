@@ -63,11 +63,13 @@ class StripeController extends Controller
                 'building' => $session->metadata->building
             ]);
 
+            // 購入者にメール通知
             if ($order->user) {
                 Mail::to($order->user->email)
                     ->send(new PurchaseItemForBuyerMail($order));
             }
 
+            // 出品者にメール通知
             if ($order->item && $order->item->user) {
                 Mail::to($order->item->user->email)
                     ->send(new PurchaseItemForSellerMail($order));

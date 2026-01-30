@@ -179,6 +179,7 @@ class ItemController extends Controller
                 ]);
             };
 
+            // 出品者にメール通知
             Mail::to($new_item->user->email)
                 ->send(new SellItemMail($new_item));
 
