@@ -14,7 +14,8 @@ class Order extends Model
         'paymethod',
         'post_code',
         'address',
-        'building'
+        'building',
+        'status',
     ];
     public function item()
     {
