@@ -6,8 +6,9 @@ use App\Models\Item;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SellItemMail extends Mailable
+class SellItemMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

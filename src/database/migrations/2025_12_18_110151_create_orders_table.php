@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->string('post_code');
             $table->string('address');
             $table->string('building')->nullable();
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }
