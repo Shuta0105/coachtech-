@@ -45,7 +45,7 @@ class UserController extends Controller
     public function edit()
     {
         try {
-            $user_profile = UserProfile::with('user')->where('user_id', auth()->id())->firstOrFail();
+            $user_profile = UserProfile::with('user')->where('user_id', auth()->id())->first();
             return view('profile-edit', compact('user_profile'));
         } catch (Exception $e) {
             return view('error');
@@ -61,9 +61,10 @@ class UserController extends Controller
     {
         try {
             $user = auth()->user();
-            $user_profile = UserProfile::where('user_id', $user->id)->firstOrFail();
+            $user_profile = UserProfile::where('user_id', $user->id)->first();
             $path = $user_profile ? $user_profile->avatar : null;
 
+            // 画像がアップロードされている場合のみ保存処理を行う
             if ($request->hasFile('avatar')) {
                 // public/avatars に保存
                 $path = $request->file('avatar')->store('avatars', 'public');

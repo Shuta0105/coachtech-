@@ -26,61 +26,7 @@ class ItemController extends Controller
     public function index(ItemSearchRequest $request)
     {
         try {
-            // 検索キーワード
-            $keyword = $request->input('keyword');
-
-            // 検索種別（price / category / name）
-            $select = $request->input('select');
-
-            // 表示タブ 
-            $tab = $request->input('tab');
-
-            $items = Item::withCount('order')
-                ->when($tab === 'mylist', function ($q) {
-                    $q->whereHas('likes', function ($q) {
-                        $q->where('user_id', auth()->id());
-                    });
-                })
-                ->when($tab !== 'mylist', function ($q) {
-                    $q->where(function ($q) {
-                        $q->where('user_id', '!=', auth()->id())
-                            ->orWhereNull('user_id');
-                    });
-                })
-                ->when($keyword, function ($q) use ($keyword, $select) {
-                    /**
-                     * ---------価格検索-------------
-                     * 例：1200 -> 1000~1999で検索
-                     */
-                    if ($select === 'price') {
-                        // 数値以外は検索しない
-                        if (!ctype_digit($keyword)) {
-                            return;
-                        }
-                        $price = (int) $keyword;
-
-                        // 0より小さい値は検索しない
-                        if ($price < 0) {
-                            return;
-                        }
-
-                        // 桁数から検索範囲を計算
-                        $digits = strlen((string) $price);
-                        $unit   = 10 ** ($digits - 1);
-
-                        $min = (int) floor($price / $unit) * $unit;
-                        $max = $min + $unit - 1;
-
-                        $q->whereBetween('price', [$min, $max]);
-                    } elseif ($select === 'category') {
-                        $q->whereHas('categories', function ($q) use ($keyword) {
-                            $q->where('content', 'like', "%{$keyword}%");
-                        });
-                    } else {
-                        $q->where('name', 'like', "%{$keyword}%");
-                    }
-                })
-                ->get();
+            $items = $this->searchItems($request);
 
             /**
              * Ajax検索時
@@ -105,9 +51,8 @@ class ItemController extends Controller
         try {
             $item = Item::with('condition')->withCount('likes')->find($item_id);
             $comments = Comment::with('user')->where('item_id', $item_id)->get();
-            $commentCount = Comment::where('item_id', $item_id)->count();
             $item_categories = ItemCategory::with('category')->where('item_id', $item_id)->get();
-            return view('product-detail', compact('item', 'comments', 'commentCount', 'item_categories'));
+            return view('product-detail', compact('item', 'comments', 'item_categories'));
         } catch (Exception $e) {
             return view('error');
         }
@@ -161,6 +106,7 @@ class ItemController extends Controller
             $user_id = auth()->id();
             $item['user_id'] = $user_id;
 
+            // 画像がアップロードされている場合のみ保存処理を行う
             if ($request->hasFile('img')) {
                 $file = $request->file('img');
 
@@ -181,7 +127,7 @@ class ItemController extends Controller
 
             // 出品者にメール通知
             Mail::to($new_item->user->email)
-                ->send(new SellItemMail($new_item));
+                ->queue(new SellItemMail($new_item));
 
             return redirect('/');
         } catch (Exception $e) {
@@ -245,5 +191,69 @@ class ItemController extends Controller
         } catch (Exception $e) {
             return view('error');
         }
+    }
+
+    /**
+     * 商品検索クエリを生成して取得する
+     */
+    private function searchItems(ItemSearchRequest $request)
+    {
+        // 検索キーワード
+        $keyword = $request->input('keyword');
+
+        // 検索種別（price / category / name）
+        $select = $request->input('select');
+
+        // 表示タブ 
+        $tab = $request->input('tab');
+
+        $items = Item::withCount('order')
+            ->when($tab === 'mylist', function ($q) {
+                $q->whereHas('likes', function ($q) {
+                    $q->where('user_id', auth()->id());
+                });
+            })
+            ->when($tab !== 'mylist', function ($q) {
+                $q->where(function ($q) {
+                    $q->where('user_id', '!=', auth()->id())
+                        ->orWhereNull('user_id');
+                });
+            })
+            ->when($keyword, function ($q) use ($keyword, $select) {
+                /**
+                 * ---------価格検索-------------
+                 * 例：1200 -> 1000~1999で検索
+                 */
+                if ($select === 'price') {
+                    // 数値以外は検索しない
+                    if (!ctype_digit($keyword)) {
+                        return;
+                    }
+                    $price = (int) $keyword;
+
+                    // 0より小さい値は検索しない
+                    if ($price < 0) {
+                        return;
+                    }
+
+                    // 桁数から検索範囲を計算
+                    $digits = strlen((string) $price);
+                    $unit   = 10 ** ($digits - 1);
+
+                    $min = (int) floor($price / $unit) * $unit;
+                    $max = $min + $unit - 1;
+
+                    $q->whereBetween('price', [$min, $max]);
+                } elseif ($select === 'category') {
+                    $q->whereHas('categories', function ($q) use ($keyword) {
+                        $q->where('content', 'like', "%{$keyword}%");
+                    });
+                } else {
+                    $q->where('name', 'like', "%{$keyword}%");
+                }
+            })
+            ->get();
+
+        return $items;
     }
 }

@@ -44,6 +44,7 @@ class StripeController extends Controller
         try {
             $sessionId = $request->query('session_id');
 
+            // session_idが無い不正・不正確なアクセスを防ぐため
             if (! $sessionId) {
                 return redirect('/');
             }
@@ -66,13 +67,13 @@ class StripeController extends Controller
             // 購入者にメール通知
             if ($order->user) {
                 Mail::to($order->user->email)
-                    ->send(new PurchaseItemForBuyerMail($order));
+                    ->queue(new PurchaseItemForBuyerMail($order));
             }
 
             // 出品者にメール通知
             if ($order->item && $order->item->user) {
                 Mail::to($order->item->user->email)
-                    ->send(new PurchaseItemForSellerMail($order));
+                    ->queue(new PurchaseItemForSellerMail($order));
             }
 
             return redirect('/');

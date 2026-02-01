@@ -24,6 +24,7 @@ coachtech フリマ
 - php artisan migrate --env=testing
 - php artisan migrate --seed
 - php artisan storage:link
+- php artisan queue:work（起動したまま）
 
 ### env ファイルの編集
 

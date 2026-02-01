@@ -34,7 +34,7 @@
             <div class="product-detail__icon-box">
                 <img class="product-detail__icon--comment"
                     src="{{ asset('img/ふきだしロゴ.png') }}">
-                <span class="product-detail__count">{{ $commentCount }}</span>
+                <span class="product-detail__count">{{ $comments->count() }}</span>
             </div>
         </div>
         <div class="product-detail__button">
@@ -71,7 +71,7 @@
             </table>
         </div>
         <div class="product-detail__comment-header">
-            <h2>コメント({{ $commentCount }})</h2>
+            <h2>コメント({{ $comments->count() }})</h2>
         </div>
         <div class="product-detail__comments">
             @foreach ($comments as $comment)
